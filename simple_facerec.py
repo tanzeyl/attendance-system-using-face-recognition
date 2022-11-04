@@ -23,7 +23,6 @@ class SimpleFacerec:
             self.known_face_names.append(filename)
             with open("encodings.txt", "a") as file:
                 for pixel in img_encoding:
-                    print(type(pixel))
                     file.write(str(pixel) + " ")
                 file.write(filename + "\n")
         print("Encoding images loaded")
