@@ -21,7 +21,8 @@ class SimpleFacerec:
             img_encoding = face_recognition.face_encodings(rgb_img)[0]
             self.known_face_encodings.append(img_encoding)
             self.known_face_names.append(filename)
-            with open("encodings.txt", "a") as file:
+            with open("encodings.txt", "w") as file:
+                file.write("\n")
                 for pixel in img_encoding:
                     file.write(str(pixel) + " ")
                 file.write(filename + "\n")

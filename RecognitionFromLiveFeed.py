@@ -2,8 +2,12 @@ import cv2
 from simple_facerec import SimpleFacerec
 import pandas as pd
 from datetime import datetime
+import mysql.connector
 
 def attendance():
+  conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
+  cursor = conn.cursor()
+
   columns = ["Roll Number", "Name", "Time"]
   data = pd.DataFrame(columns = columns)
 
@@ -12,6 +16,7 @@ def attendance():
 
   cap = cv2.VideoCapture(0)
   presentList = []
+  marked = {}
 
   while True:
     ret, frame = cap.read()
@@ -22,6 +27,7 @@ def attendance():
       cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 2)
       if name != "Unknown" and name not in presentList:
         presentList.append(name)
+        marked[name] = True
         time = datetime.now()
         time = time.strftime("%H:%M:%S")
         data.loc[len(data.index)] = [1, name, time]
@@ -31,6 +37,20 @@ def attendance():
     key = cv2.waitKey(1)
     if key == 27:
       break
+
+  for name in presentList:
+    name = name.split("_")
+    id = name[0]
+    name = name[1][:-4]
+    cursor.execute("""UPDATE `attendance` SET `presentDays` = `presentDays` + 1 WHERE `id` = {}""".format(id))
+    conn.commit()
+
+  cursor.execute("""SELECT `id` FROM `attendance`""")
+  idList = cursor.fetchall()
+
+  for row in idList:
+    cursor.execute("""UPDATE `attendance` SET `workingDays` = `workingDays` + 1 WHERE `id` = {}""".format(row[0]))
+    conn.commit()
 
   cap.release()
   cv2.destroyAllWindows()

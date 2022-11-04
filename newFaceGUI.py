@@ -7,16 +7,16 @@ def addNew():
   nameLabel = Label(popUp, text = "Enter the name:")
   nameLabel.grid(row = 0, column = 0)
 
-  rollLabel = Label(popUp, text = "Enter the roll number:")
-  rollLabel.grid(row = 1, column = 0)
+  emailLabel = Label(popUp, text = "Enter the email:")
+  emailLabel.grid(row = 1, column = 0)
 
   nameEntry = Entry(popUp, width = 50, borderwidth = 5)
   nameEntry.grid(row = 0, column = 1)
 
-  rollEntry = Entry(popUp, width = 50, borderwidth = 5)
-  rollEntry.grid(row = 1, column = 1)
+  emailEntry = Entry(popUp, width = 50, borderwidth = 5)
+  emailEntry.grid(row = 1, column = 1)
 
-  submitButton = Button(popUp, text = "Submit", padx = 50, pady = 10, command = lambda: addFace(nameEntry.get()))
+  submitButton = Button(popUp, text = "Submit", padx = 50, pady = 10, command = lambda: addFace(nameEntry.get(), emailEntry.get()))
   submitButton.grid(row = 2, column = 0, columnspan = 2)
 
   exitButton = Button(popUp, text = "Exit", padx = 50, pady = 10, command = popUp.quit)
