@@ -1,11 +1,11 @@
 import mysql.connector
+import pandas as pd
 
 conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
 cursor = conn.cursor()
 
-cursor.execute("""SELECT `id` FROM `attendance`""")
+cursor.execute("""SELECT * FROM `attendance`""")
 idList = cursor.fetchall()
 
-for row in idList:
-  cursor.execute("""UPDATE `attendance` SET `workingDays` = `workingDays` + 1 WHERE `id` = {}""".format(row[0]))
-  conn.commit()
+data = pd.DataFrame(idList)
+data.to_csv("All Data.csv", index = False)
