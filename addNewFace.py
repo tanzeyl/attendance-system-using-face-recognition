@@ -1,6 +1,10 @@
 import cv2
-from simple_facerec import SimpleFacerec
 import mysql.connector
+import importlib.util
+
+spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.py")
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
 
 def addFace(sName, sEmail):
     key = cv2. waitKey(1)
@@ -8,7 +12,7 @@ def addFace(sName, sEmail):
     name = sName
     conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
     cursor = conn.cursor()
-    cursor.execute("""INSERT INTO `attendance` (`id`,`name`,`email`, `presentDays`, `workingDays`) VALUES (NULL,'{}','{}', 0, 0)""".format(sName, sEmail))
+    cursor.execute("""INSERT INTO `attendance` (`id`,`name`,`email`, `presentDays`, `workingDays`, `leaveDays`) VALUES (NULL,'{}','{}', 0, 0, 0)""".format(sName, sEmail))
     conn.commit()
     cursor.execute("""SELECT * FROM `attendance` WHERE `id` = (SELECT MAX(`id`) FROM `attendance`)""")
     student = cursor.fetchall()
@@ -22,5 +26,5 @@ def addFace(sName, sEmail):
             cv2.destroyAllWindows()
             break
 
-    sfr = SimpleFacerec()
+    sfr = module.SimpleFacerec()
     sfr.load_encoding_images("images/")

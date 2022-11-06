@@ -1,5 +1,9 @@
 from tkinter import *
-from addNewFace import addFace
+import importlib.util
+
+spec = importlib.util.spec_from_file_location("addNewFace", "addNewFace.py")
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
 
 def addNew():
   popUp = Tk()
@@ -16,7 +20,7 @@ def addNew():
   emailEntry = Entry(popUp, width = 50, borderwidth = 5)
   emailEntry.grid(row = 1, column = 1)
 
-  submitButton = Button(popUp, text = "Submit", padx = 50, pady = 10, command = lambda: addFace(nameEntry.get(), emailEntry.get()))
+  submitButton = Button(popUp, text = "Submit", padx = 50, pady = 10, command = lambda: module.addFace(nameEntry.get(), emailEntry.get()))
   submitButton.grid(row = 2, column = 0, columnspan = 2)
 
   exitButton = Button(popUp, text = "Exit", padx = 50, pady = 10, command = popUp.quit)

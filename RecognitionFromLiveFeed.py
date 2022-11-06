@@ -1,8 +1,12 @@
 import cv2
-from simple_facerec import SimpleFacerec
 import pandas as pd
 from datetime import datetime
 import mysql.connector
+import importlib.util
+
+spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.py")
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
 
 def attendance():
   conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
@@ -11,7 +15,7 @@ def attendance():
   columns = ["Roll Number", "Name", "Time"]
   data = pd.DataFrame(columns = columns)
 
-  sfr = SimpleFacerec()
+  sfr = module.SimpleFacerec()
   sfr.load_encoded_images()
 
   cap = cv2.VideoCapture(0)
@@ -31,7 +35,7 @@ def attendance():
         time = datetime.now()
         time = time.strftime("%H:%M:%S")
         data.loc[len(data.index)] = [1, name, time]
-        data.to_csv("Attendance.csv", index = False)
+        data.to_csv("uploads/Attendance.csv", index = False)
 
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1)

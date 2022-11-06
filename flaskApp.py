@@ -18,12 +18,12 @@ def home():
 
 @app.route("/download", methods = ["GET", "POST"])
 def download_file():
-    columns = ["Roll Number", "Name", "Email", "Present Days", "Working Days"]
+    columns = ["Roll Number", "Name", "Email", "Present Days", "Working Days", "Leave Days"]
     cursor.execute("""SELECT * FROM `attendance`""")
     allData = cursor.fetchall()
     data = pd.DataFrame(allData, columns = columns)
-    data.to_csv("All Data.csv", index = False)
-    path = "All Data.csv"
+    data.to_csv("uploads/All Data.csv", index = False)
+    path = "uploads/All Data.csv"
     return send_file(path, as_attachment=True)
 
 @app.route("/allStudents", methods = ["GET", "POST"])
@@ -45,11 +45,10 @@ def sendMail():
         message["From"] = "ktanzeel80@gmail.com"
         message["To"] = email
         message.set_content("This is to inform you that your attendance is below 75%. Kindly get regular to your classes to avoid getting debarred.\nFind the file attached with this email, fill it and submit it to your respective HOD.")
-        with open("Application.jpg", "rb") as file:
+        with open("uploads/Application.pdf", "rb") as file:
             fileData = file.read()
-            fileType = imghdr.what(file.name)
             fileName = file.name
-        message.add_attachment(fileData, maintype = "image", subtype = fileType, filename = fileName)
+        message.add_attachment(fileData, maintype = "application", subtype = "octet-stream", filename = fileName)
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
             smtp.login("ktanzeel80@gmail.com", password)
             smtp.send_message(message)
@@ -70,7 +69,7 @@ def sendMailToAll():
     message["From"] = "ktanzeel80@gmail.com"
     message["To"] = emails
     message.set_content("This is to inform you that your attendance is below 75%. Kindly get regular to your classes to avoid getting debarred.\nFind the file attached with this email, fill it and submit it to your respective HOD.")
-    with open("Application.pdf", "rb") as file:
+    with open("uploads/Application.pdf", "rb") as file:
         fileData = file.read()
         fileName = file.name
     message.add_attachment(fileData, maintype = "application", subtype = "octet-stream", filename = fileName)
