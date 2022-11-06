@@ -49,7 +49,14 @@ def attendance():
   idList = cursor.fetchall()
 
   for row in idList:
-    cursor.execute("""UPDATE `attendance` SET `workingDays` = `workingDays` + 1 WHERE `id` = {}""".format(row[0]))
+    cursor.execute("""UPDATE `attendance` SET `workingDays` = `workingDays` + 1 WHERE `id` = {} AND leaveDays = 0""".format(row[0]))
+    conn.commit()
+
+  cursor.execute("""SELECT `id` FROM `attendance` WHERE `leaveDays` != 0""")
+  idList = cursor.fetchall()
+
+  for row in idList:
+    cursor.execute("""UPDATE `attendance` SET `leaveDays` = `leaveDays` - 1 WHERE `id` = {}""".format(row[0]))
     conn.commit()
 
   cap.release()

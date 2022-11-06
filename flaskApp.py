@@ -81,5 +81,31 @@ def sendMailToAll():
     allData = cursor.fetchall()
     return render_template('students.html', sList = allData, message2 = True)
 
+@app.route("/addMedicalLeave", methods=['GET', 'POST'])
+def selectStudent():
+    cursor.execute("""SELECT * FROM `attendance`""")
+    allData = cursor.fetchall()
+    return render_template('selectStudent.html', sList = allData)
+
+@app.route("/addMedical", methods = ["GET", "POST"])
+def getMedicalInfo():
+    if request.method == "POST":
+        id = request.form.get("id")
+        days = request.form.get("days")
+        cursor.execute("""UPDATE `attendance` SET `leaveDays` = {} WHERE `id` = {}""".format(days, id))
+        conn.commit()
+    cursor.execute("""SELECT * FROM `attendance`""")
+    allData = cursor.fetchall()
+    return render_template('selectStudent.html', sList = allData, message1 = True)
+
+@app.route("/search", methods = ["GET", "POST"])
+def searchStudents():
+    if request.method == "POST":
+        name = request.form.get("query")
+    name = name.capitalize()
+    cursor.execute("""SELECT * FROM `attendance` WHERE `name` LIKE '%{}%'""".format(name))
+    allData = cursor.fetchall()
+    return render_template('selectStudent.html', sList = allData)
+
 if __name__ == "__main__":
     app.run(debug = True)

@@ -89,3 +89,31 @@ a:hover {
   padding: 1%;
   margin: 2%;
 }
+
+.buttons {
+  display: flex;
+}
+
+.leaveInput {
+  font-size: 16px;
+  border-radius: 5%;
+}
+
+.search {
+  margin-top: 8px;
+}
+
+.searchBar {
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #553232;
+  width: 20%;
+  padding: 0.5%;
+}
+
+.searchBUtton {
+  font-size: 16px;
+  padding: 0.5%;
+  border-radius: 10px;
+  background-color: #07c583;
+}
