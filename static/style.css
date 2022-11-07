@@ -117,3 +117,36 @@ a:hover {
   border-radius: 10px;
   background-color: #07c583;
 }
+
+.signupForm {
+  width: 70%;
+  border: 3px solid #220659;
+  margin-top: 4%;
+  border-radius: 50px;
+}
+
+.inputFields {
+  padding: 3%;
+  font-size: 25px;
+  text-align: left;
+}
+
+.inputField {
+  width: 100%;
+  margin-top: 10px;
+  font-size: 25px;
+  border-radius: 50px;
+  padding: 10px;
+}
+
+.signupSubmit {
+  width: 25%;
+  font-size: 25px;
+  padding: 2%;
+  background-color: aliceblue;
+  border-radius: 50px;
+}
+
+.signupSubmit:hover {
+  background-color: #9a15a7;
+}

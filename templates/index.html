@@ -3,7 +3,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
   </head>
-  <a>
+  <body>
     <div class="header">
       <div class="logo">
         <strong>Attendance System Using Face Recognition</strong>
@@ -23,6 +23,9 @@
         </a>
       </div>
     </div>
+    {% if user %}
+    <center><h3 class="alert">Welcome {{ user }}</h3></center>
+    {% endif %}
     <h2>What would you like to do today?</h2>
     <ul>
       <li>
@@ -34,15 +37,13 @@
           </a>
         </form>
         {% if downloaded %}
-          <a href="{{ url_for('All Data.csv') }}">Download</a>
+        <a href="{{ url_for('All Data.csv') }}">Download</a>
         {% endif %}
       </li>
 
       <li>
         <form method="POST" action="/allStudents">
-          <button type="submit" class="tasks">
-            List all students.
-          </button>
+          <button type="submit" class="tasks">List all students.</button>
         </form>
       </li>
     </ul>

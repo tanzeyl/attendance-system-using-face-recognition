@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Signup</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">
+        <strong>Attendance System Using Face Recognition</strong>
+      </div>
+      <div class="menu">
+        <a href="#" class="link">
+          <div class="title">About</div>
+          <div class="bar"></div>
+        </a>
+        <a href="#" class="link">
+          <div class="title">Work</div>
+          <div class="bar"></div>
+        </a>
+        <a href="#" class="link">
+          <div class="title">Contact</div>
+          <div class="bar"></div>
+        </a>
+      </div>
+    </div>
+    {% if message1 %}
+    <center><h3 class="alert">Passwords do not match!</h3></center>
+    {% endif %} {% if message2 %}
+    <center><h3 class="alert">Email already exists!</h3></center>
+    {% endif %}
+    <center>
+      <div class="signupForm">
+        <center>
+          <form action="/verifySignup" method="POST">
+            <div class="inputFields">
+              <strong>Name:</strong>
+              <input type="text" name="name" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>Email:</strong>
+              <input type="text" name="email" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>College:</strong>
+              <input type="text" name="college" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>Password:</strong>
+              <input type="password" name="password" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>Confirm Password:</strong>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="inputField"
+              />
+            </div>
+            <button type="submit" class="signupSubmit">Submit</button>
+          </form>
+          <p>
+            Already have an account? <a href="{{ url_for('login') }}">Log In</a>
+          </p>
+        </center>
+      </div>
+    </center>
+  </body>
+</html>

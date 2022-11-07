@@ -4,6 +4,7 @@ from newFaceGUI import addNew
 import webbrowser
 import importlib.util
 
+
 spec = importlib.util.spec_from_file_location("RecognitionFromLiveFeed", "RecognitionFromLiveFeed.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
@@ -26,4 +27,5 @@ buttonToAddNewFace.grid(row = 1, column = 1)
 
 buttonToOpenWebsite = Button(app, text = "Open Website", padx = 10, pady = 10, command = openWebsite)
 buttonToOpenWebsite.grid(row = 1, column = 2)
+
 app.mainloop()
