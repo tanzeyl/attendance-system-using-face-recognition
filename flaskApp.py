@@ -26,7 +26,7 @@ def getInfo():
     confirmPassword = request.form.get("confirmPassword")
     if (password != confirmPassword):
         return render_template("signup.html", message1 = True)
-    cursor.execute("""SELECT `email` FROM `attendance` WHERE `email` = '{}'""".format(email))
+    cursor.execute("""SELECT `email` FROM `users` WHERE `email` = '{}'""".format(email))
     allData = cursor.fetchall()
     if (len(allData) != 0):
         return render_template("signup.html", message2 = True)
@@ -37,7 +37,7 @@ def getInfo():
     session['tableName'] = tableName
     session['user'] = name
     cursor.execute("""CREATE TABLE `{}` (
-        `id` int(10) not null primary key,
+        `id` int(10) not null auto_increment primary key,
         `name` varchar(255),
         `email` varchar(255),
         `presentDays` int(10),
@@ -46,6 +46,22 @@ def getInfo():
     )""".format(tableName))
     conn.commit()
     return render_template("index.html", user = session['user'])
+
+@app.route("/verifyLogin", methods = ["GET", "POST"])
+def userLogin():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    password = hashlib.md5(password.encode()).hexdigest()
+    cursor.execute("""SELECT * FROM `users` WHERE `email` = '{}'""".format(email))
+    allData = cursor.fetchall()
+    if password != allData[0][4]:
+        return render_template("login.html", message1 = True)
+    elif len(allData) == 0:
+        return render_template("login.html", message2 = True)
+    tableName = "attendance_" + email
+    session['tableName'] = tableName
+    session['user'] = allData[0][1]
+    return render_template("index.html", user = session["user"])
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
@@ -58,7 +74,7 @@ def home():
 @app.route("/download", methods = ["GET", "POST"])
 def download_file():
     columns = ["Roll Number", "Name", "Email", "Present Days", "Working Days", "Leave Days"]
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     data = pd.DataFrame(allData, columns = columns)
     data.to_csv("uploads/All Data.csv", index = False)
@@ -67,7 +83,7 @@ def download_file():
 
 @app.route("/allStudents", methods = ["GET", "POST"])
 def displayData():
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     return render_template('students.html', sList = allData)
 
@@ -75,7 +91,7 @@ def displayData():
 def sendMail():
     if request.method == "POST":
         id = request.form.get("id")
-        cursor.execute("""SELECT `email` FROM `attendance` WHERE `id` = {}""".format(id))
+        cursor.execute("""SELECT `email` FROM `{}` WHERE `id` = {}""".format(session["tableName"], id))
         allData = cursor.fetchall()
         email = allData[0][0]
         password = os.environ.get("PasswordMail")
@@ -96,13 +112,13 @@ def sendMail():
             smtp.login("ktanzeel80@gmail.com", password)
             smtp.send_message(message)
 
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     return render_template('students.html', sList = allData, message1 = True)
 
 @app.route("/sendEmailToAll", methods = ["GET", "POST"])
 def sendMailToAll():
-    cursor.execute("""SELECT `email` FROM `attendance` WHERE presentDays/workingDays < 0.75""")
+    cursor.execute("""SELECT `email` FROM `{}` WHERE presentDays/workingDays < 0.75""".format(session["tableName"]))
     allData = cursor.fetchall()
     emails = []
     for row in allData:
@@ -124,13 +140,13 @@ def sendMailToAll():
         smtp.login("ktanzeel80@gmail.com", password)
         smtp.send_message(message)
 
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     return render_template('students.html', sList = allData, message2 = True)
 
 @app.route("/addMedicalLeave", methods=['GET', 'POST'])
 def selectStudent():
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     return render_template('selectStudent.html', sList = allData)
 
@@ -139,9 +155,9 @@ def getMedicalInfo():
     if request.method == "POST":
         id = request.form.get("id")
         days = request.form.get("days")
-        cursor.execute("""UPDATE `attendance` SET `leaveDays` = {} WHERE `id` = {}""".format(days, id))
+        cursor.execute("""UPDATE `{}` SET `leaveDays` = {} WHERE `id` = {}""".format(session["tableName"], days, id))
         conn.commit()
-    cursor.execute("""SELECT * FROM `attendance`""")
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
     allData = cursor.fetchall()
     return render_template('selectStudent.html', sList = allData, message1 = True)
 
@@ -150,7 +166,7 @@ def searchStudents():
     if request.method == "POST":
         name = request.form.get("query")
     name = name.capitalize()
-    cursor.execute("""SELECT * FROM `attendance` WHERE `name` LIKE '%{}%'""".format(name))
+    cursor.execute("""SELECT * FROM `{}` WHERE `name` LIKE '%{}%'""".format(session["tableName"], name))
     allData = cursor.fetchall()
     return render_template('selectStudent.html', sList = allData)
 

@@ -8,7 +8,7 @@ spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
-def attendance():
+def attendance(tableName):
   conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
   cursor = conn.cursor()
 
@@ -46,21 +46,21 @@ def attendance():
     name = name.split("_")
     id = name[0]
     name = name[1][:-4]
-    cursor.execute("""UPDATE `attendance` SET `presentDays` = `presentDays` + 1 WHERE `id` = {}""".format(id))
+    cursor.execute("""UPDATE `{}` SET `presentDays` = `presentDays` + 1 WHERE `id` = {}""".format(tableName, id))
     conn.commit()
 
-  cursor.execute("""SELECT `id` FROM `attendance`""")
+  cursor.execute("""SELECT `id` FROM `{}`""".format(tableName))
   idList = cursor.fetchall()
 
   for row in idList:
-    cursor.execute("""UPDATE `attendance` SET `workingDays` = `workingDays` + 1 WHERE `id` = {} AND leaveDays = 0""".format(row[0]))
+    cursor.execute("""UPDATE `{}` SET `workingDays` = `workingDays` + 1 WHERE `id` = {} AND leaveDays = 0""".format(tableName, row[0]))
     conn.commit()
 
-  cursor.execute("""SELECT `id` FROM `attendance` WHERE `leaveDays` != 0""")
+  cursor.execute("""SELECT `id` FROM `{}` WHERE `leaveDays` != 0""".format(tableName))
   idList = cursor.fetchall()
 
   for row in idList:
-    cursor.execute("""UPDATE `attendance` SET `leaveDays` = `leaveDays` - 1 WHERE `id` = {}""".format(row[0]))
+    cursor.execute("""UPDATE `{}` SET `leaveDays` = `leaveDays` - 1 WHERE `id` = {}""".format(tableName, row[0]))
     conn.commit()
 
   cap.release()

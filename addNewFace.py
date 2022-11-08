@@ -6,15 +6,16 @@ spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
-def addFace(sName, sEmail):
+conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
+cursor = conn.cursor()
+
+def addFace(sName, sEmail, tableName):
     key = cv2. waitKey(1)
     webcam = cv2.VideoCapture(0)
     name = sName
-    conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
-    cursor = conn.cursor()
-    cursor.execute("""INSERT INTO `attendance` (`id`,`name`,`email`, `presentDays`, `workingDays`, `leaveDays`) VALUES (NULL,'{}','{}', 0, 0, 0)""".format(sName, sEmail))
+    cursor.execute("""INSERT INTO `{}` (`id`,`name`,`email`, `presentDays`, `workingDays`, `leaveDays`) VALUES (NULL,'{}','{}', 0, 0, 0)""".format(tableName, sName, sEmail))
     conn.commit()
-    cursor.execute("""SELECT * FROM `attendance` WHERE `id` = (SELECT MAX(`id`) FROM `attendance`)""")
+    cursor.execute("""SELECT * FROM `{}` WHERE `id` = (SELECT MAX(`id`) FROM `{}`)""".format(tableName, tableName))
     student = cursor.fetchall()
     uniqueID = student[0][0]
     while True:
