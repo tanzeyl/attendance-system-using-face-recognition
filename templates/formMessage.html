@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Form Email</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">
+        <strong>Attendance System Using Face Recognition</strong>
+      </div>
+      <div class="menu">
+        <a href="{{ url_for('about') }}" class="link">
+          <div class="title">About</div>
+          <div class="bar"></div>
+        </a>
+      </div>
+    </div>
+    <center>
+      <div class="messageForm">
+        <center>
+          <form
+            action="/collectMessageData"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="headerField">
+              <strong>Header:</strong>
+              <input type="text" name="header" />
+            </div>
+            <div class="bodyField">
+              <strong>Body:</strong>
+              <textarea name="body" rows="6" cols="50"></textarea>
+            </div>
+            <div class="headerField">
+              <strong>Attachment:</strong>
+              <input type="file" name="file" accept=".pdf" />
+            </div>
+            <hr />
+            <button type="submit" class="messageSubmit">Send</button>
+          </form>
+        </center>
+      </div>
+    </center>
+  </body>
+</html>

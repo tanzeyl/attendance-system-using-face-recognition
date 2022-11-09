@@ -1,21 +1,26 @@
 <html>
   <head>
     <title>All Students</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
   </head>
-  <a>
+  <body>
     <div class="header">
       <div class="logo">
         <strong>Attendance System Using Face Recognition</strong>
       </div>
       <div class="menu">
-        <a href="#" class="link">
+        <a href="{{ url_for('about') }}" class="link">
           <div class="title">About</div>
           <div class="bar"></div>
         </a>
-        <a href="#" class="link">
-          <div class="title">Work</div>
+        <a href="{{ url_for('change') }}" class="link">
+          <div class="title">Change Password</div>
           <div class="bar"></div>
         </a>
         <a href="#" class="link">
@@ -25,56 +30,66 @@
       </div>
     </div>
     {% if message1 %}
-      <center><h3 class="alert">Email sent successfully!</h3></center>
+    <center><h3 class="alert">Email sent successfully!</h3></center>
+    {% endif %} {% if message2 %}
+    <center>
+      <h3 class="alert">Email sent to all defaulters successfully!</h3>
+    </center>
     {% endif %}
-    {% if message2 %}
-      <center><h3 class="alert">Email sent to all defaulters successfully!</h3></center>
-    {% endif %}
-    <table class="table table-dark table-striped table-hover table-bordered">
-    <thead>
-      <tr>
-        <th scope="col">Roll Number</th>
-        <th scope="col"><center>Name</center></th>
-        <th scope="col">Email</th>
-        <th scope="col">Present Days</th>
-        <th scope="col">Working Days</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in sList %}
-          <tr>
-              <td>{{ row[0] }}</td>
-              <td>{{ row[1] }}</td>
-              <td>{{ row[2] }}</td>
-              <td>{{ row[3] }}</td>
-              <td>{{ row[4] }}</td>
-              <td>
-                {% if row[3]//row[4] < 0.75 %}
-                  <center>
-                    <form method="POST" action="/sendEmail">
-                      <button type="submit" class="emailButton">Send Email</button>
-                      <input type="hidden" name="id" value = {{ row[0] }}>
-                    </form>
-                  </center>
-                {% else %}
-                <center><button type="submit" class="safeButton">This student is regular.</button></center>
-                {% endif %}
-              </td>
-          </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <table
+      class="table table-dark table-striped table-hover table-bordered tableCustom"
+    >
+      <thead>
+        <tr>
+          <th scope="col">Roll Number</th>
+          <th scope="col"><center>Name</center></th>
+          <th scope="col">Email</th>
+          <th scope="col">Present Days</th>
+          <th scope="col">Working Days</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in sList %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+          <td>{{ row[4] }}</td>
+          <td>
+            {% if row[3]//row[4] < 0.75 %}
+            <center>
+              <form method="POST" action="/sendEmail">
+                <button type="submit" class="emailButton">Send Email</button>
+                <input type="hidden" name="id" value="{{ row[0] }}" />
+              </form>
+            </center>
+            {% else %}
+            <center>
+              <button type="submit" class="safeButton">
+                This student is regular.
+              </button>
+            </center>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-<div class="buttons">
-  <form method="POST" action="/sendEmailToAll">
-    <button type="submit" class="emailAllButton">Send Email to all defaulters.</button>
-  </form>
+    <div class="buttons">
+      <form method="POST" action="/sendEmailToAll">
+        <button type="submit" class="emailAllButton">
+          Send Email to all defaulters.
+        </button>
+      </form>
 
-  <form method="POST" action="/addMedicalLeave">
-    <button type="submit" class="emailAllButton">Add medical leave for a student.</button>
-  </form>
-</div>
-
+      <form method="POST" action="/addMedicalLeave">
+        <button type="submit" class="emailAllButton">
+          Add medical leave for a student.
+        </button>
+      </form>
+    </div>
   </body>
 </html>

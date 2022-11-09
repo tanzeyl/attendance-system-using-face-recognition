@@ -197,5 +197,37 @@ def passwordChange():
     cursor.execute("""UPDATE `users` SET `password` = '{}' WHERE `email` = '{}'""".format(newP, session["email"]))
     conn.commit()
     return render_template("index.html", message1 = True, user = session["user"])
+
+@app.route("/broadcast", methods = ["GET", "POST"])
+def formBroadcastMessage():
+    return render_template("formMessage.html")
+
+@app.route("/collectMessageData", methods = ["GET", "POST"])
+def sendEmail():
+    header = request.form.get("header")
+    body = request.form.get("body")
+    f = request.files['file']
+    cursor.execute("""SELECT `email` FROM `{}`""".format(session["tableName"]))
+    allData = cursor.fetchall()
+    emails = []
+    for row in allData:
+        emails.append(row[0])
+    password = os.environ.get("PasswordMail")
+    message = EmailMessage()
+    message["Subject"] = header
+    message["From"] = "ktanzeel80@gmail.com"
+    message["To"] = emails
+    message.set_content(body)
+    with open("uploads/CustomAttachment.pdf", "rb") as file:
+        fileData = file.read()
+        fileName = file.name
+    message.add_attachment(fileData, maintype = "application", subtype = "octet-stream", filename = fileName)
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login("ktanzeel80@gmail.com", password)
+        smtp.send_message(message)
+    cursor.execute("""SELECT * FROM `{}`""".format(session["tableName"]))
+    allData = cursor.fetchall()
+    return render_template('index.html', message2 = True)
+
 if __name__ == "__main__":
     app.run(debug = True)
