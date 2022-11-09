@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>About Us</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    {% if message1 %}
+    <center><h3 class="alert">Password incorrect!</h3></center>
+    {% endif %} {% if message2 %}
+    <center><h3 class="alert">Passwords do not match!</h3></center>
+    {% endif %}
+    <div class="header">
+      <div class="logo">
+        <strong>Attendance System Using Face Recognition</strong>
+      </div>
+      <div class="menu">
+        <a href="{{ url_for('about') }}" class="link">
+          <div class="title">About</div>
+          <div class="bar"></div>
+        </a>
+        <a href="{{ url_for('change') }}" class="link">
+          <div class="title">Change Password</div>
+          <div class="bar"></div>
+        </a>
+        <a href="#" class="link">
+          <div class="title">Contact</div>
+          <div class="bar"></div>
+        </a>
+      </div>
+    </div>
+    <center>
+      <div class="signupForm">
+        <center>
+          <form action="/changePassword" method="POST">
+            <div class="inputFields">
+              <strong>Old Password:</strong>
+              <input type="password" name="oldP" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>New Password:</strong>
+              <input type="password" name="newP" class="inputField" />
+            </div>
+            <div class="inputFields">
+              <strong>Confirm New Password:</strong>
+              <input type="password" name="confNewP" class="inputField" />
+            </div>
+            <button type="submit" class="signupSubmit">Submit</button>
+          </form>
+        </center>
+      </div>
+    </center>
+  </body>
+</html>

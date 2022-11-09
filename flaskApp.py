@@ -36,6 +36,7 @@ def getInfo():
     tableName = "attendance_" + email
     session['tableName'] = tableName
     session['user'] = name
+    session['email'] = email
     cursor.execute("""CREATE TABLE `{}` (
         `id` int(10) not null auto_increment primary key,
         `name` varchar(255),
@@ -61,6 +62,7 @@ def userLogin():
     tableName = "attendance_" + email
     session['tableName'] = tableName
     session['user'] = allData[0][1]
+    session['email'] = email
     return render_template("index.html", user = session["user"])
 
 @app.route("/login", methods = ["GET", "POST"])
@@ -170,5 +172,30 @@ def searchStudents():
     allData = cursor.fetchall()
     return render_template('selectStudent.html', sList = allData)
 
+@app.route("/aboutUs", methods = ["GET", "POST"])
+def about():
+    return render_template("about.html")
+
+@app.route("/password", methods = ["GET", "POST"])
+def change():
+    return render_template("change.html")
+
+@app.route("/changePassword", methods = ["GET", "POST"])
+def passwordChange():
+    oldP = request.form.get("oldP")
+    newP = request.form.get("newP")
+    confNewP = request.form.get("confNewP")
+    cursor.execute("""SELECT `password` FROM `users` WHERE `email` = '{}'""".format(session['email']))
+    allData = cursor.fetchall()
+    password = allData[0][0]
+    oldP = hashlib.md5(oldP.encode()).hexdigest()
+    if (oldP != password):
+        return render_template("change.html", message1 = True)
+    elif (newP != confNewP):
+        return render_template("change.html", message2 = True)
+    newP = hashlib.md5(newP.encode()).hexdigest()
+    cursor.execute("""UPDATE `users` SET `password` = '{}' WHERE `email` = '{}'""".format(newP, session["email"]))
+    conn.commit()
+    return render_template("index.html", message1 = True, user = session["user"])
 if __name__ == "__main__":
     app.run(debug = True)

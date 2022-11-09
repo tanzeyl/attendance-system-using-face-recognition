@@ -9,7 +9,7 @@
         <strong>Attendance System Using Face Recognition</strong>
       </div>
       <div class="menu">
-        <a href="#" class="link">
+        <a href="{{ url_for('about') }}" class="link">
           <div class="title">About</div>
           <div class="bar"></div>
         </a>
@@ -24,7 +24,9 @@
       </div>
     </div>
     {% if user %}
-    <center><h3 class="alert">Welcome {{ user }}</h3></center>
+    <h1 class="welcome">Welcome {{ user }}</h1>
+    {% endif %} {% if message1 %}
+    <center><h3 class="alert">Password changed successfully!</h3></center>
     {% endif %}
     <h2>What would you like to do today?</h2>
     <ul>
