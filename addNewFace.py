@@ -1,12 +1,12 @@
 import cv2
-import mysql.connector
+import pymysql
 import importlib.util
 
 spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
-conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
+conn = pymysql.connect(host="localhost", user="root", passwd="", database="attendanceDB")
 cursor = conn.cursor()
 
 def addFace(sName, sEmail, tableName):

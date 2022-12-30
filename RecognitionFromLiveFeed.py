@@ -1,7 +1,7 @@
 import cv2
 import pandas as pd
 from datetime import datetime
-import mysql.connector
+import pymysql
 import importlib.util
 
 spec = importlib.util.spec_from_file_location("simple_facerec", "simple_facerec.py")
@@ -9,7 +9,7 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 def attendance(tableName):
-  conn = mysql.connector.connect(host="remotemysql.com", user="aYGuuyn6NF", passwd="Ok1yVANkD7", database="aYGuuyn6NF")
+  conn = pymysql.connect(host="localhost", user="root", passwd="", database="attendanceDB")
   cursor = conn.cursor()
 
   columns = ["Roll Number", "Name", "Time"]

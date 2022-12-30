@@ -7,6 +7,7 @@ spec.loader.exec_module(module)
 
 def addNew(tableName):
   popUp = Tk()
+  popUp.title("Add a new Student")
 
   nameLabel = Label(popUp, text = "Enter the name:")
   nameLabel.grid(row = 0, column = 0)
@@ -23,7 +24,7 @@ def addNew(tableName):
   submitButton = Button(popUp, text = "Submit", padx = 50, pady = 10, command = lambda: module.addFace(nameEntry.get(), emailEntry.get(), tableName))
   submitButton.grid(row = 2, column = 0, columnspan = 2)
 
-  exitButton = Button(popUp, text = "Exit", padx = 50, pady = 10, command = popUp.quit)
+  exitButton = Button(popUp, text = "Exit", padx = 50, pady = 10, command = popUp.destroy)
   exitButton.grid(row = 3, column = 0, columnspan = 2)
 
   attention = Label(popUp, text = "After clicking on the Submit button, camera will open. Press 's' to capture a photo or 'q' to quit.")
